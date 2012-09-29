@@ -44,7 +44,7 @@ Public Class Inicializacion
   End Sub
 
   Public Shared Sub GuardarClave(ByVal valor As String)
-    Dim mDirectorioRaiz = System.IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.MyDocuments, "Integra2")
+    Dim mDirectorioRaiz = System.IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.MyDocuments, "Integra2b")
     Dim mDirectorioConfig = System.IO.Path.Combine(mDirectorioRaiz, "Configuracion")
 
     My.Computer.FileSystem.CreateDirectory(mDirectorioRaiz)
@@ -57,7 +57,7 @@ Public Class Inicializacion
   End Sub
 
   Public Shared Function LeerClave() As String
-    Dim mDirectorioRaiz = System.IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.MyDocuments, "Integra2")
+    Dim mDirectorioRaiz = System.IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.MyDocuments, "Integra2b")
     Dim mDirectorioConfig = System.IO.Path.Combine(mDirectorioRaiz, "Configuracion")
 
     My.Computer.FileSystem.CreateDirectory(mDirectorioRaiz)
