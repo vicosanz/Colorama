@@ -215,6 +215,25 @@ Public Class FrmMantenimientoTrabajoEntrega
 
 #Region "Guardar y Eliminar"
   Private Sub FrmMantenimientoTrabajoEntrega_Guardar(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles Me.Guardar
+    Dim _Deudas As PagosDetList = PagosDetList.ObtenerListaPendientes(mSucursal, Trabajo.Cliente.Entidad, Enumerados.enumTipoCuenta.cxc)
+    Dim _valordeuda As Decimal = 0
+    For Each _deuda As PagosDet In _Deudas
+      _valordeuda += _deuda.Pendiente
+    Next
+
+    If _valordeuda > 0 Then
+      If MsgBox("El cliente tiene un saldo deudor, ¿Desea imprimir el estado de cuenta del cliente?", MsgBoxStyle.YesNo, "Pregunta") = MsgBoxResult.Yes Then
+        Do While True
+          ImprimirEstadoCuentaCliente()
+          If MsgBox("¿El estado de cuenta fue impreso correctamente?", MsgBoxStyle.YesNo, "Pregunta") = MsgBoxResult.Yes Then
+            Exit Do
+          End If
+        Loop
+      Else
+        e.Cancel = True
+        Exit Sub
+      End If
+    End If
     e.Cancel = Not Guardar_datos()
   End Sub
 
@@ -349,18 +368,6 @@ Public Class FrmMantenimientoTrabajoEntrega
     End If
   End Sub
 
-  Private Sub btnestadocuenta_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnestadocuenta.Click
-    Me.CtlMovimientoInventario1.mapear_datos()
-    If Me.CtlMovimientoInventario1.MovimientoInventario.ClienteProveedor Is Nothing Then
-      Exit Sub
-    End If
-    Dim f As New Infoware.Reporteador.FrmLista(Sistema, Enumerados.EnumOpciones.AnalisisCartera)
-    f.Reporte = New Infoware.Reporteador.Reporte(Sistema.OperadorDatos, "rep_Estado_de_cuenta_cliente")
-    f.Valores = New Object() {mSucursal.Empres_Codigo, mSucursal.Sucurs_Codigo, Me.CtlMovimientoInventario1.MovimientoInventario.ClienteProveedor.Entida_Codigo}
-    'f.objAbrirElemento = New Infoware.Reporteador.FrmLista.AbrirElemento(AddressOf AbrirElemento)
-    f.ShowDialog()
-  End Sub
-
   Private Sub btncancelar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btncancelar.Click
     If mTrabajo.EsNuevo Then
       Me.Close()
@@ -381,4 +388,59 @@ Public Class FrmMantenimientoTrabajoEntrega
   Private Sub CtlBloqueo1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CtlBloqueo1.Load
 
   End Sub
+
+  Private Sub btnimprEstadoCta_Click(sender As System.Object, e As System.EventArgs)
+
+  End Sub
+
+  Private Sub btnestadocuenta_ButtonClick(sender As System.Object, e As System.EventArgs) Handles btnestadocuenta.ButtonClick
+    Me.CtlMovimientoInventario1.mapear_datos()
+    If Me.CtlMovimientoInventario1.MovimientoInventario.ClienteProveedor Is Nothing Then
+      Exit Sub
+    End If
+    Dim f As New Infoware.Reporteador.FrmLista(Sistema, Enumerados.EnumOpciones.AnalisisCartera)
+    f.Reporte = New Infoware.Reporteador.Reporte(Sistema.OperadorDatos, "rep_Estado_de_cuenta_cliente")
+    f.Valores = New Object() {mSucursal.Empres_Codigo, mSucursal.Sucurs_Codigo, Me.CtlMovimientoInventario1.MovimientoInventario.ClienteProveedor.Entida_Codigo}
+    'f.objAbrirElemento = New Infoware.Reporteador.FrmLista.AbrirElemento(AddressOf AbrirElemento)
+    f.ShowDialog()
+  End Sub
+
+  Private Sub ImprimirToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ImprimirToolStripMenuItem.Click
+    imprimirEstadoCuentaCliente()
+    MsgBox("Impresión enviada, por favor verifique que se haya realizado correctamente", MsgBoxStyle.Information, "Información")
+  End Sub
+
+  Private Sub ImprimirEstadoCuentaCliente()
+    Dim _Deudas As PagosDetList = PagosDetList.ObtenerListaPendientes(mSucursal, Trabajo.Cliente.Entidad, Enumerados.enumTipoCuenta.cxc)
+    Dim _totaldeudas As Decimal = 0
+    For Each _deuda As PagosDet In _Deudas
+      _totaldeudas += _deuda.Pendiente
+    Next
+    Trabajo.Cliente.TotalDeudas = _totaldeudas
+
+    Dim f As New Infoware.Reportes.FrmReportSimple
+    f.ArchivoReporte = ArchivoFormato()
+    f.Cabecera = Trabajo.Cliente
+    f.Detalles = _Deudas
+    f.Imprimir()
+  End Sub
+
+  Private Sub ModificarFormatoToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ModificarFormatoToolStripMenuItem.Click
+    Dim _Deudas As PagosDetList = PagosDetList.ObtenerListaPendientes(mSucursal, Trabajo.Cliente.Entidad, Enumerados.enumTipoCuenta.cxc)
+    Dim _totaldeudas As Decimal = 0
+    For Each _deuda As PagosDet In _Deudas
+      _totaldeudas += _deuda.Pendiente
+    Next
+    Trabajo.Cliente.TotalDeudas = _totaldeudas
+
+    Dim f As New Infoware.Reportes.FrmReportSimple
+    f.ArchivoReporte = ArchivoFormato()
+    f.Cabecera = Trabajo.Cliente
+    f.Detalles = _Deudas
+    f.ShowDialog()
+  End Sub
+
+  Private Function ArchivoFormato() As String
+    Return Me.Sistema.DirectorioRaiz & "\Formatos\EstadoCuentaCliente.rps"
+  End Function
 End Class

@@ -85,7 +85,7 @@ Public Class MovimientoInventario
 
   Public ReadOnly Property Descripcion() As String
     Get
-      Return String.Format("{0} {1} {2}", TipoMovimientoInventarioString, CompraVentaNumero, ClienteProveedorString)
+      Return String.Format("{0} {1} {2} {3}", TipoMovimientoInventarioString, TrabajoNumero, CompraVentaNumero, ClienteProveedorString)
     End Get
   End Property
 
@@ -222,6 +222,16 @@ Public Class MovimientoInventario
         Return Venta.Venta_Numero
       End If
       Return 0
+    End Get
+  End Property
+
+  Public ReadOnly Property TrabajoNumero As String
+    Get
+      If Trabajo Is Nothing Then
+        Return String.Empty
+      Else
+        Return String.Format("Sobre {0}", Trabajo.Trabaj_Secuencia.ToString)
+      End If
     End Get
   End Property
 

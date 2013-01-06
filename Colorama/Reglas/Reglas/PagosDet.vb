@@ -121,6 +121,12 @@ Public Class PagosDet
     End Set
   End Property
 
+  Public ReadOnly Property Asignaciones As PagosDetAsignacionList
+    Get
+      Return PagosDetAsignacionList.ObtenerLista(Me)
+    End Get
+  End Property
+
   Public ReadOnly Property esCxC() As Boolean
     Get
       If Me.MovimientoInventario IsNot Nothing AndAlso Me.MovimientoInventario.Venta IsNot Nothing Then
@@ -304,6 +310,7 @@ Public Class PagosDet
     End Get
   End Property
 
+  <Infoware.Reportes.CampoReporteAtributo("Descripcion", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 200, True)> _
   Public ReadOnly Property Descripcion() As String
     Get
       Dim _descripcion As String = ""
@@ -385,7 +392,8 @@ Public Class PagosDet
   '    End If
   '  End Get
   'End Property
-  Public ReadOnly Property ValorconSigno As Decimal
+  <Infoware.Reportes.CampoReporteAtributo("ValorConSigno", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 100, True)> _
+   Public ReadOnly Property ValorconSigno As Decimal
     Get
       If PardetTipoMovPago Is Nothing Then
         Return 0
@@ -397,6 +405,17 @@ Public Class PagosDet
     End Get
   End Property
 
+  <Infoware.Reportes.CampoReporteAtributo("Abono", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 100, True)> _
+  Public ReadOnly Property Abono As Decimal
+    Get
+      If Not Pardet_TipoMovPagoEnum = Enumerados.enumTipoMovPagos.Documento Then
+        Return 0
+      End If
+      Return Pagdet_AsignacionPago
+    End Get
+  End Property
+
+  <Infoware.Reportes.CampoReporteAtributo("Saldo", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 100, True)> _
   Public ReadOnly Property Pendiente As Decimal
     Get
       If Not Pardet_TipoMovPagoEnum = Enumerados.enumTipoMovPagos.Documento Then
@@ -406,6 +425,29 @@ Public Class PagosDet
     End Get
   End Property
 
+  <Infoware.Reportes.CampoReporteAtributo("Sobre", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Numero, 100, True)> _
+  Public ReadOnly Property TrabajoNumero As Integer
+    Get
+      If MovimientoInventario Is Nothing OrElse MovimientoInventario.Trabajo Is Nothing Then
+        Return 0
+      Else
+        Return MovimientoInventario.Trabajo.Trabaj_Secuencia
+      End If
+    End Get
+  End Property
+
+  <Infoware.Reportes.CampoReporteAtributo("Fecha", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Fecha, 100, True)> _
+  Public ReadOnly Property Fecha As Date
+    Get
+      If MovimientoInventario Is Nothing Then
+        Return Now.Date
+      Else
+        Return MovimientoInventario.Movinv_Fecha
+      End If
+    End Get
+  End Property
+
+  <Infoware.Reportes.CampoReporteAtributo("Referencia", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 200, True)> _
   Public ReadOnly Property Referencia As String
     Get
       If MovimientoInventario Is Nothing Then
@@ -415,6 +457,8 @@ Public Class PagosDet
       End If
     End Get
   End Property
+
+
 
   Public Overridable Sub MapearDataRowaObjeto(ByVal Fila As DataRow)
     Empres_Codigo = CType(Fila("Empres_Codigo"), Integer)

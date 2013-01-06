@@ -52,6 +52,16 @@ Public Class Item
     End If
   End Sub
 
+  Private mCantidad As Decimal = 0
+  Public Property Cantidad As Decimal
+    Get
+      Return mCantidad
+    End Get
+    Set(value As Decimal)
+      mCantidad = value
+    End Set
+  End Property
+
   'WWTSParametroDet
   Public Overridable Property PardetGrupo() As WWTSParametroDet
     Get

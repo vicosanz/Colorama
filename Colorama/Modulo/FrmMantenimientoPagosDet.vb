@@ -388,6 +388,9 @@ Public Class FrmMantenimientoPagosDet
     'Me.ComboboxSubCuentaContable1.Parametro = Enumerados.EnumParametros.SubCuenta
     'Me.ComboboxSubCuentaContable1.Llenar_Datos()
 
+    Me.PuedeImprimir = True
+    Me.PuedeFormato = True
+
     ComboBoxConceptosRetencion1.OperadorDatos = Sistema.OperadorDatos
     ComboBoxConceptosRetencion1.Parametro = Enumerados.EnumParametros.ConceptoRetencion
     'ComboBoxConceptosRetencion1.Llenar_Datos()
@@ -439,4 +442,34 @@ Public Class FrmMantenimientoPagosDet
   Private Sub CtlBloqueo1_Desbloquear(ByVal sender As Object, ByVal e As System.EventArgs) Handles CtlBloqueo1.Desbloquear
     Me.dtfecha.Enabled = Not Me.CtlBloqueo1.Bloqueado
   End Sub
+
+  Private Sub FrmMantenimientoPagosDet_Imprimir(sender As Object, e As System.EventArgs) Handles Me.Imprimir
+    If PagosDet.EsNuevo AndAlso MsgBox("Antes de imprimir debe guardar el pago, ¿Desea guardar el pago ahora?", MsgBoxStyle.YesNo, "Pregunta") = MsgBoxResult.No Then
+      Exit Sub
+    End If
+    If Guardar_datos() And PagosDet.Guardar Then
+      Dim f As New Infoware.Reportes.FrmReportSimple
+      f.ArchivoReporte = ArchivoFormato()
+      f.Cabecera = PagosDet
+      f.Detalles = PagosDet.Asignaciones
+      f.Imprimir()
+    End If
+  End Sub
+
+  Private Sub FrmMantenimientoPagosDet_ModificarFormato(sender As Object, e As System.EventArgs) Handles Me.ModificarFormato
+    If PagosDet.EsNuevo AndAlso MsgBox("Antes de imprimir debe guardar el pago, ¿Desea guardar el pago ahora?", MsgBoxStyle.YesNo, "Pregunta") = MsgBoxResult.No Then
+      Exit Sub
+    End If
+    If Guardar_datos() And PagosDet.Guardar Then
+      Dim f As New Infoware.Reportes.FrmReportSimple
+      f.ArchivoReporte = ArchivoFormato()
+      f.Cabecera = PagosDet
+      f.Detalles = PagosDet.Asignaciones
+      f.ShowDialog()
+    End If
+  End Sub
+
+  Private Function ArchivoFormato() As String
+    Return Me.Sistema.DirectorioRaiz & "\Formatos\CancelacionCliente.rps"
+  End Function
 End Class

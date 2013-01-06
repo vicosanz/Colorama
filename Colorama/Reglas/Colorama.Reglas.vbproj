@@ -81,6 +81,7 @@
     <Compile Include="Database\Bodega.vb" />
     <Compile Include="Database\Cliente.vb" />
     <Compile Include="Database\Compra.vb" />
+    <Compile Include="Database\PagosDetAsignacion.vb" />
     <Compile Include="Database\ItemPrecioxCantidad.vb" />
     <Compile Include="Database\TrabajoxMovimientoInventario.vb" />
     <Compile Include="Database\ItemDetalle.vb" />
@@ -127,6 +128,7 @@
     <Compile Include="Reglas\Bodega.vb" />
     <Compile Include="Reglas\Cliente.vb" />
     <Compile Include="Reglas\Compra.vb" />
+    <Compile Include="Reglas\PagosDetAsignacion.vb" />
     <Compile Include="Reglas\ItemDetalle.vb" />
     <Compile Include="Reglas\ItemPrecioxCantidad.vb" />
     <Compile Include="Reglas\TrabajoxMovimientoInventario.vb" />

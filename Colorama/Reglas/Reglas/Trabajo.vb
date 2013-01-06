@@ -43,6 +43,40 @@ Public Class Trabajo
     End If
   End Sub
 
+  Private mItems As String = String.Empty
+  Public ReadOnly Property Items As String
+    Get
+      If String.IsNullOrWhiteSpace(mItems) Then
+        mItems = AgregarCantidadaItems()
+      End If
+      Return mItems
+    End Get
+  End Property
+
+  Private Function AgregarCantidadaItems() As String
+    Dim oResult As String = String.Empty
+    Dim bReturn As Boolean
+    Dim ds As DataTable = Nothing
+    With OperadorDatos
+      .AgregarParametro("@Accion", "it")
+      .AgregarParametro("@Empres_Codigo", Empres_Codigo)
+      .AgregarParametro("@Sucurs_Codigo", Sucurs_Codigo)
+      .AgregarParametro("@Trabaj_Secuencia", Trabaj_Secuencia)
+      .Procedimiento = "proc_Trabajo"
+      bReturn = .Ejecutar(ds)
+      .LimpiarParametros()
+    End With
+    If bReturn AndAlso Not ds Is Nothing AndAlso ds.Rows.Count > 0 Then
+      For Each _dr As DataRow In ds.Rows
+        If Not String.IsNullOrWhiteSpace(oResult) Then
+          oResult = oResult + ", "
+        End If
+        oResult = oResult + String.Format("{0} ({1})", CInt(CDec(_dr(1))).ToString, CStr(_dr(0)))
+      Next
+    End If
+    Return oResult
+  End Function
+
   'Sucursal
   Public Overridable Property Sucursal() As Sucursal
     Get
@@ -90,14 +124,31 @@ Public Class Trabajo
     End Set
   End Property
 
-  <Infoware.Reportes.CampoReporteAtributo("Sobre", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Numero, 80, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Hora apertura", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 110, True)> _
+  Public ReadOnly Property HoraApertura As String
+    Get
+      Dim _fecha As DateTime = Nothing
+      For Each _tlog As TrabajoLog In TrabajoLogList.ObtenerLista(Me)
+        If _tlog.Pardet_AccionTrabajo = Enumerados.enumEstadoSobre.SobreRegistrado Then
+          _fecha = _tlog.TraLog_FechaHora
+        End If
+      Next
+      If _fecha = Nothing Then
+        Return String.Empty
+      Else
+        Return String.Format("{0} {1}", _fecha.ToShortDateString, _fecha.ToShortTimeString)
+      End If
+    End Get
+  End Property
+
+  <Infoware.Reportes.CampoReporteAtributo("Sobre", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Numero, 70, True)> _
   Public ReadOnly Property Sobre As Integer
     Get
       Return Trabaj_Secuencia
     End Get
   End Property
 
-  <Infoware.Reportes.CampoReporteAtributo("Tipo", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 90, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Trabajo", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 75, True)> _
   Public Overridable ReadOnly Property PardetTipoTrabajoString() As String
     Get
       If PardetTipoTrabajo Is Nothing Then
@@ -108,7 +159,7 @@ Public Class Trabajo
     End Get
   End Property
 
-  <Infoware.Reportes.CampoReporteAtributo("Cliente", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 200, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Cliente", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 190, True)> _
   Public ReadOnly Property ClienteString As String
     Get
       If Cliente Is Nothing Then
@@ -142,27 +193,10 @@ Public Class Trabajo
     End Get
   End Property
 
-  <Infoware.Reportes.CampoReporteAtributo("Fotos bajadas", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Numero, 60, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Fotos bajadas", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Numero, 60, False)> _
   Public ReadOnly Property Fotosbajadas As Integer
     Get
       Return Trabaj_FotosBajadas
-    End Get
-  End Property
-
-  <Infoware.Reportes.CampoReporteAtributo("Hora apertura", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 100, False)> _
-  Public ReadOnly Property HoraApertura As String
-    Get
-      Dim _fecha As DateTime = Nothing
-      For Each _tlog As TrabajoLog In TrabajoLogList.ObtenerLista(Me)
-        If _tlog.Pardet_AccionTrabajo = Enumerados.enumEstadoSobre.SobreRegistrado Then
-          _fecha = _tlog.TraLog_FechaHora
-        End If
-      Next
-      If _fecha = Nothing Then
-        Return String.Empty
-      Else
-        Return _fecha.ToShortTimeString
-      End If
     End Get
   End Property
 
@@ -227,7 +261,7 @@ Public Class Trabajo
     End Get
   End Property
 
-  <Infoware.Reportes.CampoReporteAtributo("Estado", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 100, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Estado", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Texto, 110, True)> _
   Public ReadOnly Property EstadoTrabajo As String
     Get
       Dim _trabajolog As TrabajoLog = UltimoTrabajoLog
@@ -280,7 +314,7 @@ Public Class Trabajo
   End Property
 
   Private mDeuda As Decimal = 0
-  <Infoware.Reportes.CampoReporteAtributo("Deuda", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 70, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Valor", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 70, True)> _
   Public ReadOnly Property Deuda As Decimal
     Get
       Return mDeuda
@@ -288,7 +322,7 @@ Public Class Trabajo
   End Property
 
   Private mPagado As Decimal = 0
-  <Infoware.Reportes.CampoReporteAtributo("Pagado", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 70, True)> _
+  <Infoware.Reportes.CampoReporteAtributo("Abono", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 70, True)> _
   Public ReadOnly Property Pagado As Decimal
     Get
       Return mPagado
@@ -405,7 +439,7 @@ End Class
 Public Class TrabajoList
   Inherits System.ComponentModel.BindingList(Of Trabajo)
 
-  Public Shared Function ObtenerLista(ByVal _Sucursal As Sucursal, ByVal _EstadoSobre As Enumerados.enumEstadoSobre, ByVal _filtro As String) As TrabajoList
+  Public Shared Function ObtenerLista(ByVal _Sucursal As Sucursal, ByVal _EstadoSobre As Enumerados.enumEstadoSobre, _fecdesde As Date, _fechasta As Date, ByVal _filtro As String) As TrabajoList
     Dim oResult As TrabajoList = New TrabajoList
     Dim bReturn As Boolean
     Dim ds As DataTable = Nothing
@@ -414,7 +448,11 @@ Public Class TrabajoList
       .AgregarParametro("@Empres_Codigo", _Sucursal.Empres_Codigo)
       .AgregarParametro("@Sucurs_Codigo", _Sucursal.Sucurs_Codigo)
       .AgregarParametro("@Pardet_AccionTrabajo", _EstadoSobre)
-       .AgregarParametro("@filtro", _filtro)
+      If Not _fecdesde = Nothing Then
+        .AgregarParametro("@fecdesde", _fecdesde.Date)
+        .AgregarParametro("@fechasta", _fechasta.Date)
+      End If
+      .AgregarParametro("@filtro", _filtro)
       .Procedimiento = "proc_Trabajo"
       bReturn = .Ejecutar(ds)
       .LimpiarParametros()
@@ -428,7 +466,6 @@ Public Class TrabajoList
     End If
     Return oResult
   End Function
-
 
 End Class
 #End Region

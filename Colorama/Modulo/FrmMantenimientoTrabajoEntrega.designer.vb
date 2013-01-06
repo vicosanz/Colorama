@@ -36,6 +36,12 @@ Partial Class FrmMantenimientoTrabajoEntrega
     Me.TabControlMovimientos = New System.Windows.Forms.TabControl()
     Me.TabPage2 = New System.Windows.Forms.TabPage()
     Me.CtlTrabajoLog1 = New Colorama.Modulo.CtlTrabajoLog()
+    Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+    Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+    Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+    Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+    Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+    Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
     Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
     Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
     Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -53,7 +59,9 @@ Partial Class FrmMantenimientoTrabajoEntrega
     Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
     Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
     Me.ToolStripMovimiento = New System.Windows.Forms.ToolStrip()
-    Me.btnestadocuenta = New System.Windows.Forms.ToolStripButton()
+    Me.btnestadocuenta = New System.Windows.Forms.ToolStripSplitButton()
+    Me.ImprimirToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+    Me.ModificarFormatoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
     Me.btnpagos = New System.Windows.Forms.ToolStripButton()
     Me.btnimprimir = New System.Windows.Forms.ToolStripButton()
     Me.btnformato = New System.Windows.Forms.ToolStripButton()
@@ -140,7 +148,6 @@ Partial Class FrmMantenimientoTrabajoEntrega
     Me.txttiempo.PromptText = ""
     Me.txttiempo.Size = New System.Drawing.Size(318, 20)
     Me.txttiempo.TabIndex = 2
-    Me.txttiempo.TipoTexto = Infoware.Controles.Base.EnumTipoTexto.Ninguno
     '
     'lbltrabajo
     '
@@ -180,7 +187,7 @@ Partial Class FrmMantenimientoTrabajoEntrega
     Me.TabControlMovimientos.Location = New System.Drawing.Point(3, 3)
     Me.TabControlMovimientos.Name = "TabControlMovimientos"
     Me.TabControlMovimientos.SelectedIndex = 0
-    Me.TabControlMovimientos.Size = New System.Drawing.Size(186, 68)
+    Me.TabControlMovimientos.Size = New System.Drawing.Size(992, 427)
     Me.TabControlMovimientos.TabIndex = 3
     '
     'TabPage2
@@ -209,7 +216,7 @@ Partial Class FrmMantenimientoTrabajoEntrega
     DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
     Me.CtlTrabajoLog1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
     Me.CtlTrabajoLog1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-    Me.CtlTrabajoLog1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn15, Me.DataGridViewTextBoxColumn14, Me.DataGridViewTextBoxColumn13, Me.DataGridViewTextBoxColumn12, Me.DataGridViewTextBoxColumn11, Me.DataGridViewTextBoxColumn10, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn1})
+    Me.CtlTrabajoLog1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn21, Me.DataGridViewTextBoxColumn20, Me.DataGridViewTextBoxColumn19, Me.DataGridViewTextBoxColumn18, Me.DataGridViewTextBoxColumn17, Me.DataGridViewTextBoxColumn16, Me.DataGridViewTextBoxColumn15, Me.DataGridViewTextBoxColumn14, Me.DataGridViewTextBoxColumn13, Me.DataGridViewTextBoxColumn12, Me.DataGridViewTextBoxColumn11, Me.DataGridViewTextBoxColumn10, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn1})
     DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
     DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
     DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -231,9 +238,45 @@ Partial Class FrmMantenimientoTrabajoEntrega
     DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
     Me.CtlTrabajoLog1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
     Me.CtlTrabajoLog1.RowHeadersVisible = False
-    Me.CtlTrabajoLog1.Size = New System.Drawing.Size(186, 68)
+    Me.CtlTrabajoLog1.Size = New System.Drawing.Size(992, 427)
     Me.CtlTrabajoLog1.TabIndex = 0
     Me.CtlTrabajoLog1.Trabajo = Nothing
+    '
+    'DataGridViewTextBoxColumn21
+    '
+    Me.DataGridViewTextBoxColumn21.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+    Me.DataGridViewTextBoxColumn21.ReadOnly = True
+    '
+    'DataGridViewTextBoxColumn20
+    '
+    Me.DataGridViewTextBoxColumn20.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+    Me.DataGridViewTextBoxColumn20.ReadOnly = True
+    '
+    'DataGridViewTextBoxColumn19
+    '
+    Me.DataGridViewTextBoxColumn19.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+    Me.DataGridViewTextBoxColumn19.ReadOnly = True
+    '
+    'DataGridViewTextBoxColumn18
+    '
+    Me.DataGridViewTextBoxColumn18.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+    Me.DataGridViewTextBoxColumn18.ReadOnly = True
+    '
+    'DataGridViewTextBoxColumn17
+    '
+    Me.DataGridViewTextBoxColumn17.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+    Me.DataGridViewTextBoxColumn17.ReadOnly = True
+    '
+    'DataGridViewTextBoxColumn16
+    '
+    Me.DataGridViewTextBoxColumn16.HeaderText = "No existen registros a presentar"
+    Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+    Me.DataGridViewTextBoxColumn16.ReadOnly = True
     '
     'DataGridViewTextBoxColumn15
     '
@@ -341,13 +384,26 @@ Partial Class FrmMantenimientoTrabajoEntrega
     '
     'btnestadocuenta
     '
+    Me.btnestadocuenta.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImprimirToolStripMenuItem, Me.ModificarFormatoToolStripMenuItem})
     Me.btnestadocuenta.Image = CType(resources.GetObject("btnestadocuenta.Image"), System.Drawing.Image)
     Me.btnestadocuenta.ImageTransparentColor = System.Drawing.Color.Magenta
     Me.btnestadocuenta.MergeAction = System.Windows.Forms.MergeAction.Insert
     Me.btnestadocuenta.MergeIndex = 13
     Me.btnestadocuenta.Name = "btnestadocuenta"
-    Me.btnestadocuenta.Size = New System.Drawing.Size(117, 22)
+    Me.btnestadocuenta.Size = New System.Drawing.Size(129, 22)
     Me.btnestadocuenta.Text = "Estado de cuenta"
+    '
+    'ImprimirToolStripMenuItem
+    '
+    Me.ImprimirToolStripMenuItem.Name = "ImprimirToolStripMenuItem"
+    Me.ImprimirToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+    Me.ImprimirToolStripMenuItem.Text = "Imprimir"
+    '
+    'ModificarFormatoToolStripMenuItem
+    '
+    Me.ModificarFormatoToolStripMenuItem.Name = "ModificarFormatoToolStripMenuItem"
+    Me.ModificarFormatoToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+    Me.ModificarFormatoToolStripMenuItem.Text = "Modificar formato"
     '
     'btnpagos
     '
@@ -448,7 +504,6 @@ Partial Class FrmMantenimientoTrabajoEntrega
   Friend WithEvents DataGridViewTextBoxColumn5 As System.Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents DataGridViewTextBoxColumn6 As System.Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents DataGridViewTextBoxColumn7 As System.Windows.Forms.DataGridViewTextBoxColumn
-  Friend WithEvents btnestadocuenta As System.Windows.Forms.ToolStripButton
   Friend WithEvents DataGridViewTextBoxColumn8 As System.Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents DataGridViewTextBoxColumn9 As System.Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents btncancelar As System.Windows.Forms.ToolStripButton
@@ -460,5 +515,14 @@ Partial Class FrmMantenimientoTrabajoEntrega
   Friend WithEvents TabControlMovimientos As System.Windows.Forms.TabControl
   Friend WithEvents DataGridViewTextBoxColumn14 As System.Windows.Forms.DataGridViewTextBoxColumn
   Friend WithEvents DataGridViewTextBoxColumn15 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents DataGridViewTextBoxColumn16 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents btnestadocuenta As System.Windows.Forms.ToolStripSplitButton
+  Friend WithEvents ImprimirToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents ModificarFormatoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+  Friend WithEvents DataGridViewTextBoxColumn17 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents DataGridViewTextBoxColumn18 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents DataGridViewTextBoxColumn19 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents DataGridViewTextBoxColumn20 As System.Windows.Forms.DataGridViewTextBoxColumn
+  Friend WithEvents DataGridViewTextBoxColumn21 As System.Windows.Forms.DataGridViewTextBoxColumn
 
 End Class

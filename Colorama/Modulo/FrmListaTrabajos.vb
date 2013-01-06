@@ -183,19 +183,19 @@ Public Class FrmListaTrabajos
   Sub Llenar_datos(Optional ByVal _filtro As String = "")
     Select Case TipoPresentacion
       Case enumTipoPresentacion.AperturaSobre
-        MyBase.Titulo = "Apertura de Sobre"
+        MyBase.Titulo = "Apertura Cajera"
         MyBase.AgregarLeyenda = "Agregar un nuevo Sobre"
       Case enumTipoPresentacion.ProcesarSobre
-        MyBase.Titulo = "Procesar Sobre"
+        MyBase.Titulo = "Diseñadores"
         MyBase.AgregarLeyenda = "Agregar un nuevo Sobre"
       Case enumTipoPresentacion.ImprimirSobre
-        MyBase.Titulo = "Imprimir Sobre"
+        MyBase.Titulo = "Laboratorio"
         MyBase.AgregarLeyenda = "Agregar un nuevo Sobre"
       Case enumTipoPresentacion.FacturarSobre
-        MyBase.Titulo = "Facturar Sobre"
+        MyBase.Titulo = "Facturación"
         MyBase.AgregarLeyenda = "Agregar un nuevo Sobre"
       Case enumTipoPresentacion.EntregarSobre
-        MyBase.Titulo = "Entregar Sobre"
+        MyBase.Titulo = "Entregar Cajera"
         MyBase.AgregarLeyenda = "Agregar un nuevo Sobre"
     End Select
 
@@ -226,18 +226,40 @@ Public Class FrmListaTrabajos
 
     Me.ListBindingSource.DataSource = GetType(Trabajo)
 
+    Dim estadosobre As Enumerados.enumEstadoSobre
     Select Case TipoPresentacion
       Case enumTipoPresentacion.AperturaSobre
-        mTrabajos = TrabajoList.ObtenerLista(mSucursal, Enumerados.enumEstadoSobre.SobreRegistrado, _filtro)
+        estadosobre = Enumerados.enumEstadoSobre.SobreRegistrado
       Case enumTipoPresentacion.ProcesarSobre
-        mTrabajos = TrabajoList.ObtenerLista(mSucursal, Enumerados.enumEstadoSobre.TomadoporEditores, _filtro)
+        estadosobre = Enumerados.enumEstadoSobre.TomadoporEditores
       Case enumTipoPresentacion.ImprimirSobre
-        mTrabajos = TrabajoList.ObtenerLista(mSucursal, Enumerados.enumEstadoSobre.TomadoImprenta, _filtro)
+        estadosobre = Enumerados.enumEstadoSobre.TomadoImprenta
       Case enumTipoPresentacion.FacturarSobre
-        mTrabajos = TrabajoList.ObtenerLista(mSucursal, Enumerados.enumEstadoSobre.TomadoFacturacion, _filtro)
+        estadosobre = Enumerados.enumEstadoSobre.TomadoFacturacion
       Case enumTipoPresentacion.EntregarSobre
-        mTrabajos = TrabajoList.ObtenerLista(mSucursal, Enumerados.enumEstadoSobre.TomadoEntrega, _filtro)
+        estadosobre = Enumerados.enumEstadoSobre.TomadoEntrega
     End Select
+
+    mTrabajos = TrabajoList.ObtenerLista(mSucursal, estadosobre, IIf(Me.CheckBox1.Checked, Me.dtfecdesde.Value, Nothing), IIf(Me.CheckBox1.Checked, Me.dtfechasta.Value, Nothing), _filtro)
+
+    Dim totales As String = ""
+
+    Select Case TipoPresentacion
+      Case enumTipoPresentacion.AperturaSobre, enumTipoPresentacion.FacturarSobre, enumTipoPresentacion.EntregarSobre
+        Dim valor As Decimal = 0
+        Dim abono As Decimal = 0
+        Dim saldo As Decimal = 0
+        For Each _trabajo As Trabajo In mTrabajos
+          valor += _trabajo.Deuda
+          abono += _trabajo.Pagado
+          saldo += _trabajo.Saldo
+        Next
+
+        totales = String.Format("Valor: {0}, Abono: {1}, Saldo: {2}", valor.ToString("0.00"), abono.ToString("0.00"), saldo.ToString("0.00"))
+    End Select
+
+    Me.lbl_totales.Text = totales
+
     Dim mitemssort As New Infoware.Reglas.SortedView(mTrabajos)
     ListBindingSource.DataSource = mitemssort
   End Sub
@@ -283,11 +305,28 @@ Public Class FrmListaTrabajos
 
   Private Sub FrmListaTrabajos_DespuesSeleccionarCampos(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.DespuesSeleccionarCampos
     Dim DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn
-    DataGridViewTextBoxColumn1.DataPropertyName = "MinutosenEspera"
-    DataGridViewTextBoxColumn1.HeaderText = "Minutos en espera"
-    DataGridViewTextBoxColumn1.Width = 70
-    Me.DataGridView1.Columns.Insert(3, DataGridViewTextBoxColumn1)
+    'DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn
+    'DataGridViewTextBoxColumn1.DataPropertyName = "MinutosenEspera"
+    'DataGridViewTextBoxColumn1.HeaderText = "Minutos en espera"
+    'DataGridViewTextBoxColumn1.Width = 70
+    'Me.DataGridView1.Columns.Insert(3, DataGridViewTextBoxColumn1)
+
+    Select Case TipoPresentacion
+      Case enumTipoPresentacion.ProcesarSobre, enumTipoPresentacion.ImprimirSobre
+        Me.DataGridView1.Columns.RemoveAt(5)
+        Me.DataGridView1.Columns.RemoveAt(5)
+        Me.DataGridView1.Columns.RemoveAt(5)
+
+    End Select
+
+    Select Case TipoPresentacion
+      Case enumTipoPresentacion.ImprimirSobre, enumTipoPresentacion.FacturarSobre, enumTipoPresentacion.EntregarSobre
+        DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn
+        DataGridViewTextBoxColumn1.DataPropertyName = "Items"
+        DataGridViewTextBoxColumn1.HeaderText = "Resumen"
+        DataGridViewTextBoxColumn1.Width = 100
+        Me.DataGridView1.Columns.Add(DataGridViewTextBoxColumn1)
+    End Select
 
     Select Case TipoPresentacion
       Case enumTipoPresentacion.ProcesarSobre, enumTipoPresentacion.ImprimirSobre
@@ -295,7 +334,7 @@ Public Class FrmListaTrabajos
         DataGridViewTextBoxColumn1.DataPropertyName = "EmpleadoUltimoLog"
         DataGridViewTextBoxColumn1.HeaderText = "Tomado por"
         DataGridViewTextBoxColumn1.Width = 150
-        Me.DataGridView1.Columns.Insert(6, DataGridViewTextBoxColumn1)
+        Me.DataGridView1.Columns.Add(DataGridViewTextBoxColumn1)
     End Select
 
     'Select Case TipoPresentacion
@@ -328,5 +367,9 @@ Public Class FrmListaTrabajos
     Dim f As New FrmTrabajoHistorial(Sistema, Restriccion)
     f.Trabajo = Trabajo
     f.ShowDialog()
+  End Sub
+
+  Private Sub CheckBox1_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CheckBox1.CheckedChanged, dtfecdesde.ValueChanged, dtfechasta.ValueChanged
+    Llenar_datos()
   End Sub
 End Class

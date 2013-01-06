@@ -106,6 +106,24 @@ Public Class Cliente
     End Get
   End Property
 
+  <Infoware.Reportes.CampoReporteAtributo("FechaHoy", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Fecha, 150, False)> _
+  Public ReadOnly Property FechaHoy() As Date
+    Get
+      Return Now.Date
+    End Get
+  End Property
+
+  Private mTotalDeudas As Decimal = 0
+  <Infoware.Reportes.CampoReporteAtributo("TotalDeudas", Infoware.Reportes.CampoReporteAtributo.EnumTipoDato.Decimales, 150, False)> _
+  Public Property TotalDeudas() As Decimal
+    Get
+      Return mTotalDeudas
+    End Get
+    Set(value As Decimal)
+      mTotalDeudas = value
+    End Set
+  End Property
+
   Public ReadOnly Property EmailsString() As String
     Get
       Return Entidad.EmailsString
